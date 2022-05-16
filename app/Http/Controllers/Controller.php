@@ -19,15 +19,15 @@ class Controller extends BaseController
     public function __construct()
     {
         $faker = Factory::create();
-        for ($i = 1; $i < 6; $i++) {
+        for ($i = 1; $i < 7; $i++) {
             $this->categories[] = [
                 'id' => $i,
                 'title' => $faker->colorName()
             ];
         }
-        for ($i = 1; $i < 21; $i++) {
-            $categoryId = $i % 5;
-            if (!$categoryId) $categoryId = 5;
+        for ($i = 1; $i < 37; $i++) {
+            $categoryId = $i % 6;
+            if (!$categoryId) $categoryId = 6;
             $this->news[] = [
                 'id' => $i,
                 'categoryId' => $categoryId,
@@ -44,7 +44,8 @@ class Controller extends BaseController
         return $this->categories;
     }
 
-    protected function getCategoryTitleById($categoryId) {
+    protected function getCategoryTitleById($categoryId)
+    {
         foreach ($this->categories as $value) {
             if ($value['id'] == $categoryId) {
                 $res = $value['title'];
@@ -88,5 +89,15 @@ class Controller extends BaseController
             }
         }
         return $res;
+    }
+  
+    public function about()
+    {
+        return view('about');
+    }
+
+    public function contacts()
+    {
+        return view('contacts');
     }
 }

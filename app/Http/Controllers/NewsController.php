@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 class NewsController extends Controller
 {
+    public function index()
+    {
+        return view('welcome');
+    }
+
     public function listNewsByCategory($categoryId)
     {
         $newsList = $this->getNews(null, $categoryId);

@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Controller as BaseController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\IndexController as AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,14 +17,21 @@ use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*
-Route::get('/', function () {
-    return '<h2>Welcome!</h2><h3><a href="/categories">News by categories</a></h3>';
-});
 
-Route::get('/about', function () {
-    return 'About page';
-});
+Route::get(
+    '/',
+    [NewsController::class, 'index']
+)->name('news.main');
+
+Route::get(
+    '/about',
+    [BaseController::class, 'about']
+)->name('about');
+
+Route::get(
+    '/contacts',
+    [BaseController::class, 'contacts']
+)->name('contacts');
 
 Route::get(
     '/news/{id}',
@@ -45,11 +55,9 @@ Route::get(
 )->name('categories.list');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('/', AdminController::class)->name('index');
+    Route::resource('/categories', AdminCategoryController::class);
     Route::resource('/news', AdminNewsController::class);
-});
-*/
-Route::get('/', function (){
-    return 'Добро пожаловать!';
 });
 
 Route::get('/about', function () {

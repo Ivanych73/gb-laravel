@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class NewsController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
-     */
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+	 */
     public function index()
     {
-        return view('admin.news.index');
+        return view('admin.categories.index');
     }
 
     /**
@@ -24,8 +24,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        $categoriesList = $this->getCategories();
-        return view('admin.news.create', ['categoriesList' => $categoriesList]);
+        return view('admin.categories.create');
     }
 
     /**
