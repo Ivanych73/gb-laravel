@@ -8,6 +8,7 @@ class NewsController extends Controller
     {
         return view('welcome');
     }
+
     public function listNewsByCategory($categoryId)
     {
         $newsList = $this->getNews(null, $categoryId);

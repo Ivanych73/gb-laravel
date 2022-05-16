@@ -59,3 +59,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('/categories', AdminCategoryController::class);
     Route::resource('/news', AdminNewsController::class);
 });
+
+Route::get('/about', function () {
+    return 'About page';
+});
+
+Route::get('/news/{id}', function (string $id) {
+    return "Новость номер $id";
+});

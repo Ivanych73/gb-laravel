@@ -90,6 +90,7 @@ class Controller extends BaseController
         }
         return $res;
     }
+  
     public function about()
     {
         return view('about');
