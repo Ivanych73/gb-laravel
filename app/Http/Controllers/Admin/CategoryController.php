@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Queries\QueryBuilderCategories;
+use App\Models\Category;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -12,9 +15,14 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
 	 */
-    public function index()
+    public function index(QueryBuilderCategories $categoriesList)
     {
-        return view('admin.categories.index');
+        return view(
+            'admin.categories.index',
+            [
+                'categories'=> $categoriesList->listCategories()
+            ]    
+        );
     }
 
     /**
@@ -35,7 +43,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->only(['title', 'description']);
+		$category = new Category($validated);
+
+		if($category->save()) {
+			return redirect()->route('admin.categories.index')
+				->with('success', 'Запись успешно добавлена');
+		}
+
+		return back()->with('error', 'Ошибка добавления');
     }
 
     /**
@@ -55,9 +71,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        return view('admin.categories.edit', ['category' => $category]);
     }
 
     /**
@@ -67,9 +83,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->only(['title', 'description']);
+		$category = $category->fill($validated);
+		if($category->save()) {
+			return redirect()->route('admin.categories.index')
+				->with('success', 'Запись успешно обновлена');
+		}
+		return back()->with('error', 'Ошибка обновления');
     }
 
     /**
@@ -78,8 +100,14 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+            return response()->json('success');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json('fail', 400);
+        }
     }
 }

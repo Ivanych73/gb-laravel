@@ -7,13 +7,13 @@
             @csrf
             <div class="mb-3">
                 <label for="nameInput" class="form-label">Имя пользователя</label>
-                <input type="text" class="form-control" id="nameInput" name="userName" placeholder="Имя Фамилия"
-                    value="{{ old('userName') }}" required>
+                <input type="text" class="form-control" id="nameInput" name="full_name" placeholder="Имя Фамилия"
+                    value="{{ old('full_name') }}" required>
             </div>
             <div class="mb-3">
                 <label for="feedbackTextarea" class="form-label">Текст отзыва</label>
-                <textarea class="form-control" id="feedbackTextarea" name="feedbackText" rows="3"
-                    required>{{ old('feedbackText') }}</textarea>
+                <textarea class="form-control" id="feedbackTextarea" name="text" rows="3"
+                    required>{{ old('text') }}</textarea>
             </div>
             <button type="submit" class="btn btn-primary mb-3">Отправить</button>
         </form>
