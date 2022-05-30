@@ -5,7 +5,7 @@
         <h1 class="h2">Панель администратора</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-                @php $msg = "Это сообщение было добавлено динамически"; @endphp
+                @php $msg = "Успех"; @endphp
 
 
             </div>
@@ -14,7 +14,7 @@
 
 
     <x-alert type="success" :message="$msg"></x-alert>
-    <x-alert type="warning" message="Ворнинг"></x-alert>
+    <x-alert type="warning" message="Передупреждение"></x-alert>
     <x-alert type="danger" message="Ошибка"></x-alert>
 
 

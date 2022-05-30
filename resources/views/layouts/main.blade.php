@@ -24,6 +24,16 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">О нас</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('contacts') }}">Контакты</a>
                     </li>
+                    <li class="dropdown nav-item">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Связаться с нами
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{ route('user.feedback') }}">Обратная связь</a></li>
+                            <li><a class="dropdown-item" href="{{ route('user.order') }}">Оформить заказ</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -36,7 +36,17 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string'],
+            'content' => ['required', 'string'],
+            'author' => ['required', 'string'],
+            'Category_Id' => ['required', 'integer']
+        ]);
+
+        return view('admin.news.store', [
+            'result' => "success",
+            'message' => "Новость успешно добавлена!"
+        ]);
     }
 
     /**

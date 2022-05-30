@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
+use App\Http\Controllers\UserFormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,10 +61,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('/news', AdminNewsController::class);
 });
 
-Route::get('/about', function () {
-    return 'About page';
-});
-
-Route::get('/news/{id}', function (string $id) {
-    return "Новость номер $id";
+Route::controller(UserFormController::class)->group(function () {
+    Route::get('/feedback', 'feedback')->name('user.feedback');
+    Route::get('/order', 'order')->name('user.order');
+    Route::match(['post', 'get'], '/saveFeedback', 'saveFeedback')->name('user.saveFeedback');
+    Route::match(['post', 'get'], '/saveOrder', 'saveOrder')->name('user.saveOrder');
 });
