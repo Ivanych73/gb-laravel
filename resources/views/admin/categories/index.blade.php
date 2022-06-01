@@ -12,15 +12,37 @@
     </div>
 
     <div class="table-responsive">
+        @include('inc.messages')
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
                     <th scope="col">#ID</th>
                     <th scope="col">Наименование</th>
+                    <th scope="col">Описание</th>
                     <th scope="col">Дата добавления</th>
+                    <th scope="col">Управление</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @forelse($categories as $category)
+                   <tr>
+                       <td>{{ $category->id }}</td>
+                       <td>{{ $category->title }} ( {{ $category->news_count }}) </td>
+                       <td>{{ $category->description }}</td>
+                       <td>{{ $category->created_at }}</td>
+                       <td><a href="{{ route('admin.categories.edit', ['category' => $category->id]) }}" style="font-size: 12px;">Ред.</a> &nbsp;
+                           <a href="javascript:;" style="color:red; font-size: 12px;" data-delete="yes"
+                                data-id={{ $category->id }} data-type="categories">Уд.</a>
+                        </td>
+                   </tr>
+               @empty
+                   <tr>
+                       <td colspan="4">Записей нет</td>
+                   </tr>
+               @endforelse
+            </tbody>
         </table>
     </div>
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/deleteitem.js') }}"></script>
 @endsection
