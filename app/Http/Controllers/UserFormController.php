@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\Forms\Feedback\StoreRequest;
+use App\Http\Requests\User\Forms\Order\StoreRequest as OrderStoreRequest;
+use App\Models\Feedback;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,56 +21,48 @@ class UserFormController extends Controller
         return view('user.order');
     }
 
-    public function saveFeedback(Request $request)
+    public function saveFeedback(StoreRequest $request)
     {
-        $request->validate([
-            'userName' => ['required', 'string'],
-            'feedbackText' => ['required', 'string']
-        ]);
+        $validated = $request->validated();
+        $feedback = new Feedback($validated);
 
-        $result = $this->save($request->except('_token'), "feedback");
-        return view('user.store', [
-            'title' => $result['title'],
-            'result' => $result['result'],
-            'message' => $result['message']
-        ]);
-    }
-
-    public function saveOrder(Request $request)
-    {
-        $request->validate([
-            'userName' => ['required', 'string'],
-            'userEmail' => ['required', 'email'],
-            'userPhone' => ['required', 'regex:/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/'],
-            'orderText' => ['required', 'string']
-        ]);
-        //dd($request);
-        $result = $this->save($request->except('_token'), "order");
-        return view('user.store', [
-            'title' => $result['title'],
-            'result' => $result['result'],
-            'message' => $result['message']
-        ]);
-    }
-
-    private function save(array $fields, string $type)
-    {
-        $contents = json_encode($fields);
-        $filename = $type . '/' . str_replace(' ', '', $fields['userName']) . date('-Y-m-d-h-i-s') . '.json';
-        if (Storage::put($filename, $contents)) {
-            $result = "success";
-            $title = "$type saved";
-            $message = "Your $type succesfully saved!";
+        if ($feedback->save()) {
+            $result = [
+                'result' => 'success',
+                'title' => __('message.user.form.feedback.create.success'),
+                'message' => __('message.user.form.feedback.create.success')
+            ];
         } else {
-            $result = "danger";
-            $title = "$type not saved";
-            $message = "Error saving your $type";
+            $result = [
+                'result' => 'danger',
+                'title' => __('message.user.form.feedback.create.fail'),
+                'message' => __('message.user.form.feedback.create.fail')
+            ];
         }
 
-        return [
-            'result' => $result,
-            'title' => $title,
-            'message' => $message
-        ];
+        return view('user.store', $result);
+    }
+
+    public function saveOrder(OrderStoreRequest $request)
+    {
+        $validated = $request->validated();
+
+        $order = new Order($validated);
+
+        if ($order->save()) {
+            $result = [
+                'result' => 'success',
+                'title' => __('message.user.form.order.create.success'),
+                'message' => __('message.user.form.order.create.success')
+            ];
+        } else {
+            $result = [
+                'result' => 'danger',
+                'title' => __('message.user.form.order.create.fail'),
+                'message' => __('message.user.form.order.create.fail')
+            ];
+        }
+
+        return view('user.store', $result);
     }
 }
