@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Feedback;
+use App\Queries\QueryBuilderFeedbacks;
 use Illuminate\Http\Request;
-use App\Queries\QueryBuilderCategories;
-use App\Models\Category;
 use Illuminate\Support\Facades\Log;
 
-class CategoryController extends Controller
+class FeedbackController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-	 */
-    public function index(QueryBuilderCategories $categoriesList)
+     * @return \Illuminate\Http\Response
+     */
+    public function index(QueryBuilderFeedbacks $feedbacksList)
     {
         return view(
-            'admin.categories.index',
+            'admin.feedbacks.index',
             [
-                'categories'=> $categoriesList->listCategories()
+                'feedbacks'=> $feedbacksList->listFeedbacks()
             ]    
         );
     }
@@ -32,7 +32,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        //
     }
 
     /**
@@ -43,24 +43,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->only(['title', 'description']);
-		$category = new Category($validated);
-
-		if($category->save()) {
-			return redirect()->route('admin.categories.index')
-				->with('success', 'Запись успешно добавлена');
-		}
-
-		return back()->with('error', 'Ошибка добавления');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Feedback  $feedback
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Feedback $feedback)
     {
         //
     }
@@ -68,27 +60,27 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Feedback  $feedback
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Feedback $feedback)
     {
-        return view('admin.categories.edit', ['category' => $category]);
+        return view('admin.feedbacks.edit', ['feedback' => $feedback]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Feedback  $feedback
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Feedback $feedback)
     {
-        $validated = $request->only(['title', 'description']);
-		$category = $category->fill($validated);
-		if($category->save()) {
-			return redirect()->route('admin.categories.index')
+        $validated = $request->only(['status']);
+		$feedback = $feedback->fill($validated);
+		if($feedback->save()) {
+			return redirect()->route('admin.feedbacks.index')
 				->with('success', 'Запись успешно обновлена');
 		}
 		return back()->with('error', 'Ошибка обновления');
@@ -97,13 +89,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Feedback  $feedback
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Feedback $feedback)
     {
         try {
-            $category->delete();
+            $feedback->delete();
             return response()->json('success');
         } catch (\Exception $e) {
             Log::error($e->getMessage());

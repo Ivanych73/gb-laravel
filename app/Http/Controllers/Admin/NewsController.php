@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
+use App\Queries\QueryBuilderAuthors;
+use App\Queries\QueryBuilderNews;
+use App\Queries\QueryBuilderCategories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Stmt\TryCatch;
 
 class NewsController extends Controller
 {
@@ -12,9 +18,9 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(QueryBuilderNews $newslist)
     {
-        return view('admin.news.index');
+        return view('admin.news.index', ['news' => $newslist->listNews()]);
     }
 
     /**
@@ -22,10 +28,13 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(QueryBuilderCategories $categoriesList, QueryBuilderAuthors $authorsList)
     {
-        $categoriesList = $this->getCategories();
-        return view('admin.news.create', ['categoriesList' => $categoriesList]);
+        return view('admin.news.create', [
+            'categoriesList' => $categoriesList->listCategories(['id', 'title']),
+            'authorsList' =>
+            $authorsList->listAuthors(['id', 'first_name', 'last_name'])
+        ]);
     }
 
     /**
@@ -39,14 +48,17 @@ class NewsController extends Controller
         $request->validate([
             'title' => ['required', 'string'],
             'content' => ['required', 'string'],
-            'author' => ['required', 'string'],
-            'Category_Id' => ['required', 'integer']
+            'annotation' => ['required', 'string'],
+            'authors' => ['required', 'array'],
+            'categories' => ['required', 'array']
         ]);
-
-        return view('admin.news.store', [
-            'result' => "success",
-            'message' => "Новость успешно добавлена!"
-        ]);
+        $validated = $request->except('_token', 'authors', 'categories');
+        $news = new News($validated);
+        if ($news->save() && $news->categories()->sync($request->categories) && $news->authors()->sync($request->authors)) {
+            return redirect()->route('admin.news.index')
+                ->with('success', 'Запись успешно добавлена');
+        };
+        return back()->with('error', 'Ошибка добавления');
     }
 
     /**
@@ -66,21 +78,33 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(News $news, QueryBuilderNews $newslist, QueryBuilderCategories $categoriesList, QueryBuilderAuthors $authorsList)
     {
-        //
+        //dd($news);
+        return view('admin.news.edit', [
+            'news' => $newslist->showNewsDetailById($news->id),
+            'categoriesList' => $categoriesList->listCategories(['id', 'title']),
+            'authorsList' =>
+            $authorsList->listAuthors(['id', 'first_name', 'last_name'])
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, News $news)
     {
-        //
+        $validated = $request->only(['title', 'annotation', 'content', 'status']);
+        $news = $news->fill($validated);
+        if ($news->save() && $news->categories()->sync($request->categories) && $news->authors()->sync($request->authors)) {
+            return redirect()->route('admin.news.index')
+                ->with('success', 'Запись успешно обновлена');
+        };
+        return back()->with('error', 'Ошибка обновления');
     }
 
     /**
@@ -89,8 +113,14 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(News $news)
     {
-        //
+        try {
+            $news->delete();
+            return response()->json('success');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json('fail', 400);
+        }
     }
 }

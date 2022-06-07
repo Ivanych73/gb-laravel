@@ -4,24 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Queries\QueryBuilderCategories;
-use App\Models\Category;
+use App\Queries\QueryBuilderAuthors;
+use App\Models\Author;
 use Illuminate\Support\Facades\Log;
 
-class CategoryController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-	 */
-    public function index(QueryBuilderCategories $categoriesList)
+     * @return \Illuminate\Http\Response
+     */
+    public function index(QueryBuilderAuthors $authorsList)
     {
         return view(
-            'admin.categories.index',
+            'admin.authors.index',
             [
-                'categories'=> $categoriesList->listCategories()
-            ]    
+                'authors' => $authorsList->listAuthors()
+            ]
         );
     }
 
@@ -32,7 +32,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        return view('admin.authors.create');
     }
 
     /**
@@ -43,15 +43,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->only(['title', 'description']);
-		$category = new Category($validated);
+        $validated = $request->only(['first_name', 'last_name']);
+        $author = new Author($validated);
 
-		if($category->save()) {
-			return redirect()->route('admin.categories.index')
-				->with('success', 'Запись успешно добавлена');
-		}
+        if ($author->save()) {
+            return redirect()->route('admin.authors.index')
+                ->with('success', 'Запись успешно добавлена');
+        }
 
-		return back()->with('error', 'Ошибка добавления');
+        return back()->with('error', 'Ошибка добавления');
     }
 
     /**
@@ -68,12 +68,12 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Author $author
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Author $author)
     {
-        return view('admin.categories.edit', ['category' => $category]);
+        return view('admin.authors.edit', ['author' => $author]);
     }
 
     /**
@@ -83,15 +83,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Author $author)
     {
-        $validated = $request->only(['title', 'description']);
-		$category = $category->fill($validated);
-		if($category->save()) {
-			return redirect()->route('admin.categories.index')
-				->with('success', 'Запись успешно обновлена');
-		}
-		return back()->with('error', 'Ошибка обновления');
+        $validated = $request->only(['first_name', 'last_name']);
+        $author = $author->fill($validated);
+        if ($author->save()) {
+            return redirect()->route('admin.authors.index')
+                ->with('success', 'Запись успешно обновлена');
+        }
+        return back()->with('error', 'Ошибка обновления');
     }
 
     /**
@@ -100,10 +100,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Author $author)
     {
         try {
-            $category->delete();
+            $author->delete();
             return response()->json('success');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
