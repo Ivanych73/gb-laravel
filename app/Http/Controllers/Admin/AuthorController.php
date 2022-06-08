@@ -94,7 +94,6 @@ class AuthorController extends Controller
                 ->with('success', __('message.admin.author.update.success'));
         }
         return back()->with('error', __('message.admin.author.update.success'));
-    }
 
     /**
      * Remove the specified resource from storage.
