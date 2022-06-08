@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email', 100);
             $table->string('phone', 35);
             $table->text('text');
-            $table->enum('status', ['new', 'processed', 'success', 'fail']);
+            $table->enum('status', ['new', 'processed', 'success', 'fail'])->default('new');
             $table->timestamps();
         });
     }

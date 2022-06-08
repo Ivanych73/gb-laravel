@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('full_name', 100);
             $table->text('text');
-            $table->enum('status', ['new', 'closed']);
+            $table->enum('status', ['new', 'closed'])->default('new');
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@
 
     <div class="table-responsive">
         <h3>Форма добавления новости</h3>
+        @include('inc.messages')
     </div>
     <div class="container">
         <form action="{{ route('admin.news.store') }}" method="post">
@@ -36,7 +37,7 @@
                         <label for="statusSelect">Статус</label>
                         <select class="form-select" id="statusSelect" name="status">
                             <option value="active" @if (old('status') == 'active') selected @endif>Опубликовано</option>
-                            <option value="draft" @if (old('status') == 'draft') selected @endif selected>Черновик
+                            <option value="draft" @if (old('status') == 'draft' || !old('status')) selected @endif>Черновик
                             </option>
                             <option value="off" @if (old('status') == 'off') selected @endif>Снято с публикации
                             </option>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\Forms\Feedback\StoreRequest;
+use App\Http\Requests\User\Forms\Order\StoreRequest as OrderStoreRequest;
 use App\Models\Feedback;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -19,55 +21,45 @@ class UserFormController extends Controller
         return view('user.order');
     }
 
-    public function saveFeedback(Request $request)
+    public function saveFeedback(StoreRequest $request)
     {
-        $request->validate([
-            'full_name' => ['required', 'string', 'min:3', 'max:100'],
-            'text' => ['required', 'string', 'min:5']
-        ]);
-
-        $validated = $request->except('token');
+        $validated = $request->validated();
         $feedback = new Feedback($validated);
 
-        if ($feedback->save()){
+        if ($feedback->save()) {
             $result = [
                 'result' => 'success',
-                'title' => 'Отзыв успешно сохранен',
-                'message' => 'Ваш отзыв успешно сохранен'
+                'title' => __('message.user.form.feedback.create.success'),
+                'message' => __('message.user.form.feedback.create.success')
             ];
         } else {
             $result = [
                 'result' => 'danger',
-                'title' => 'Ошибка сохранения',
-                'message' => 'Ошибка сохранения отзыва'
+                'title' => __('message.user.form.feedback.create.fail'),
+                'message' => __('message.user.form.feedback.create.fail')
             ];
         }
 
         return view('user.store', $result);
     }
 
-    public function saveOrder(Request $request)
+    public function saveOrder(OrderStoreRequest $request)
     {
-        $request->validate([
-            'full_name' => ['required', 'string', 'min:3', 'max:100'],
-            'email' => ['required', 'email', 'min:6', 'max:100'],
-            'phone' => ['required', 'regex:/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', 'min:10', 'max:35'],
-            'text' => ['required', 'string', 'min:5']
-        ]);
-        $validated = $request->except('token');
+        $validated = $request->validated();
+
         $order = new Order($validated);
 
-        if ($order->save()){
+        if ($order->save()) {
             $result = [
                 'result' => 'success',
-                'title' => 'Заказ успешно сохранен',
-                'message' => 'Ваш заказ успешно сохранен'
+                'title' => __('message.user.form.order.create.success'),
+                'message' => __('message.user.form.order.create.success')
             ];
         } else {
             $result = [
                 'result' => 'danger',
-                'title' => 'Ошибка сохранения',
-                'message' => 'Ошибка сохранения заказа'
+                'title' => __('message.user.form.order.create.fail'),
+                'message' => __('message.user.form.order.create.fail')
             ];
         }
 

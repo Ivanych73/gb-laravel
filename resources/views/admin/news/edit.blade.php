@@ -7,6 +7,7 @@
 
     <div class="table-responsive">
         <h3>Форма редактирования новости</h3>
+        @include('inc.messages')
     </div>
     <div class="container">
         <form method="post" action="{{ route('admin.news.update', ['news' => $news]) }}">

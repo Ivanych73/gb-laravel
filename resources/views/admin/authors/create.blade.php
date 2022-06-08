@@ -18,7 +18,7 @@
                     value="{{ old('first_name') }}">
             </div>
             <div class="mb-3">
-                <label for="lastNameInput" class="form-label">Имя</label>
+                <label for="lastNameInput" class="form-label">Фамилия</label>
                 <input type="text" class="form-control" id="lastNameInput" name="last_name" placeholder="Фамилия" required
                     value="{{ old('last_name') }}">
             </div>

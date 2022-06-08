@@ -16,12 +16,12 @@
             <div class="mb-3">
                 <label for="firstNameInput" class="form-label">Имя</label>
                 <input type="text" class="form-control" id="firstNameInput" name="first_name" placeholder="Имя" required
-                    value="{{ $author->first_name }}">
+                    value="@if (old('first_name')) {{ old('first_name') }} @else {{ $author->first_name }} @endif">
             </div>
             <div class="mb-3">
-                <label for="lastNameInput" class="form-label">Имя</label>
+                <label for="lastNameInput" class="form-label">Фамилия</label>
                 <input type="text" class="form-control" id="lastNameInput" name="last_name" placeholder="Фамилия" required
-                    value="{{ $author->last_name }}">
+                    value="@if (old('last_name')) {{ old('last_name') }} @else {{ $author->last_name }} @endif">
             </div>
             <button type="submit" class="btn btn-primary mb-3">Сохранить</button>
             <a href="{{ route('admin.authors.index') }}" class="btn btn-primary mb-3">Выйти без сохранения</a>

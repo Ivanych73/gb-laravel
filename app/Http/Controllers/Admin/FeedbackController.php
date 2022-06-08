@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Feedback\UpdateRequest;
 use App\Models\Feedback;
 use App\Queries\QueryBuilderFeedbacks;
 use Illuminate\Http\Request;
@@ -20,8 +21,8 @@ class FeedbackController extends Controller
         return view(
             'admin.feedbacks.index',
             [
-                'feedbacks'=> $feedbacksList->listFeedbacks()
-            ]    
+                'feedbacks' => $feedbacksList->listFeedbacks()
+            ]
         );
     }
 
@@ -75,15 +76,15 @@ class FeedbackController extends Controller
      * @param  \App\Models\Feedback  $feedback
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Feedback $feedback)
+    public function update(UpdateRequest $request, Feedback $feedback)
     {
-        $validated = $request->only(['status']);
-		$feedback = $feedback->fill($validated);
-		if($feedback->save()) {
-			return redirect()->route('admin.feedbacks.index')
-				->with('success', 'Запись успешно обновлена');
-		}
-		return back()->with('error', 'Ошибка обновления');
+        $validated = $request->validated();
+        $feedback = $feedback->fill($validated);
+        if ($feedback->save()) {
+            return redirect()->route('admin.feedbacks.index')
+                ->with('success', __('message.admin.feedback.update.success'));
+        }
+        return back()->with('error', __('message.admin.feedback.update.fail'));
     }
 
     /**

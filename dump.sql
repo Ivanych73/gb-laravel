@@ -216,7 +216,6 @@ INSERT INTO `categories` (`id`, `title`, `description`, `created_at`, `updated_a
 	(2, 'DeepSkyBlue', 'Dolorem voluptatum itaque suscipit sequi a nam aut repellat. Repudiandae sunt similique doloribus voluptatem ut corrupti eligendi. Ducimus molestiae aperiam culpa iusto.', NULL, NULL),
 	(3, 'OliveDrab', 'Similique pariatur nihil qui id est non sunt. Voluptatem ex ut ipsam libero et iste nulla nihil. Autem ut earum necessitatibus deleniti rerum magnam. Molestiae quasi odio quis dicta.', NULL, NULL),
 	(4, 'RosyBrown', 'Iure esse cum non aut sit et. Aut est id maxime officiis. Nihil quas non fugit aut officiis aut.', NULL, NULL),
-
 	(5, 'Green', 'Категория Green', NULL, '2022-05-27 05:19:10'),
 	(6, 'Linen', 'Категория Linen', NULL, '2022-05-26 14:02:47'),
 	(7, 'Lavender Magenta', 'Категория Lavender Magenta', '2022-05-26 12:27:35', '2022-05-26 12:27:35'),
