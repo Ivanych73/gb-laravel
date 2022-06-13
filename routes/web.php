@@ -43,8 +43,8 @@ Route::get(
 )->name('contacts');
 
 Route::get(
-    '/news/{id}',
-    [NewsController::class, 'showNewsDetailById']
+    '/news/{slug}',
+    [NewsController::class, 'showNewsDetailBySlug']
 )->where(
     'id',
     '\d+'

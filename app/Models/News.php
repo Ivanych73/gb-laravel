@@ -11,7 +11,7 @@ class News extends Model
     use HasFactory, Sluggable;
 
     protected $table = "news";
-    protected $fillable = ['title', 'annotation', 'content', 'status', 'image_url', 'source_id', 'slug'];
+    protected $fillable = ['title', 'annotation', 'content', 'status', 'image_url', 'source_id', 'slug', 'source_url'];
 
     public function categories()
     {
@@ -23,7 +23,7 @@ class News extends Model
         return $this->BelongsToMany(Author::class, 'authors_news');
     }
 
-        /**
+    /**
      * Return the sluggable configuration array for this model.
      *
      * @return array

@@ -23,10 +23,10 @@ class NewsController extends Controller
         ]);
     }
 
-    public function showNewsDetailById(int $newsId, QueryBuilderNews $newsDetail)
+    public function showNewsDetailBySlug(string $slug, QueryBuilderNews $newsDetail)
     {
         $list = [];
-        $article = $newsDetail->showNewsDetailById($newsId)->toArray();
+        $article = $newsDetail->showNewsDetailBySlug($slug)->toArray();
         foreach ($article['authors'] as $author) {
             $list[] = $author['first_name'] . ' ' . $author['last_name'];
         }
@@ -42,7 +42,7 @@ class NewsController extends Controller
     public function listCategories(QueryBuilderCategories $categoriesList)
     {
         return view('news.categorieslist', [
-            'categoriesList' => $categoriesList->listCategories(['id', 'title'])
+            'categoriesList' => $categoriesList->listCategoriesWithNews(['id', 'title'])
         ]);
     }
 }

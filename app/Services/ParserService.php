@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Contract\Parser;
 use Orchestra\Parser\Xml\Facade as XmlParser;
+use App\Models\News;
 
 class ParserService implements Parser
 {
@@ -41,17 +42,30 @@ class ParserService implements Parser
         ]);
     }
 
-    public function parseMultiple($sources): array
+    public function parseAndSrore($source): void
     {
-        $res = [];
-        foreach ($sources as $source) {
-            $this->setLink($source->url);
-            $news = $this->parse()['news'];
-            foreach ($news as &$newsItem) {
-                $newsItem['source_id'] = $source->id;
+        $this->setLink($source->url);
+        $news = $this->parse()['news'];
+        foreach ($news as $newsItem) {
+            if (!$this->newsExist($newsItem['link'])) {
+                $content = $newsItem['description'] . ' Полностью новость можно просмотерть по этой <a href=' .
+                    $newsItem['link'] . '>ссылке</a>';
+                $newsRecord = News::create([
+                    'title' => $newsItem['title'],
+                    'annotation' => $newsItem['description'],
+                    'content' => $content,
+                    'source_id' => $source->id,
+                    'source_url' => $newsItem['link']
+                ]);
             }
-            $res = array_merge($res, $news);
         }
-        return $res;
+    }
+
+    public function newsExist(string $url): bool
+    {
+        if (News::where('source_url', $url)->get()->first()) {
+            return true;
+        }
+        return false;
     }
 }

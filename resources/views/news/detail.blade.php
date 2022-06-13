@@ -9,7 +9,7 @@
                 <div class="text-muted mb-2">Категория(и): {{ $article['categories'] }}</div>
             </header>
             <section class="mb-5">
-                <p class="fs-5 mb-4">{{ $article['content'] }}</p>
+                <p class="fs-5 mb-4">{!! $article['content'] !!}</p>
             </section>
         </article>
     </div>
