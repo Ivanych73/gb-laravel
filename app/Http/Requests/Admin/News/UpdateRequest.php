@@ -29,7 +29,8 @@ class UpdateRequest extends FormRequest
             'annotation' => ['required', 'string', 'min:3'],
             'status' => ['required', 'in:active,draft,off'],
             'authors' => ['required', 'array', 'exists:authors,id'],
-            'categories' => ['required', 'array', 'exists:categories,id']
+            'categories' => ['required', 'array', 'exists:categories,id'],
+            'image_url' => ['nullable']
         ];
     }
 }

@@ -75,7 +75,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/orders', AdminOrderController::class);
         Route::resource('/users', AdminUserController::class);
         Route::resource('/sources', AdminSourceController::class);
-        Route::get('/parser', AdminParserController::class)->name('parser');
+        Route::controller(AdminParserController::class)->group(function () {
+            Route::get('/parser/sources', 'showSources')->name('parser.sources');
+            Route::match(['post', 'get'], '/parser/news', 'parseNews')->name('parser.news');
+        });
     });
 });
 
@@ -84,6 +87,10 @@ Route::controller(UserFormController::class)->group(function () {
     Route::get('/order', 'order')->name('user.order');
     Route::match(['post', 'get'], '/saveFeedback', 'saveFeedback')->name('user.saveFeedback');
     Route::match(['post', 'get'], '/saveOrder', 'saveOrder')->name('user.saveOrder');
+});
+
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth', 'admin']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
 Route::group(['middleware' => 'guest'], function () {

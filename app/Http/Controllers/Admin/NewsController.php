@@ -9,6 +9,7 @@ use App\Models\News;
 use App\Queries\QueryBuilderAuthors;
 use App\Queries\QueryBuilderNews;
 use App\Queries\QueryBuilderCategories;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -44,9 +45,12 @@ class NewsController extends Controller
      * @param  App\Http\Requests\Admin\News\StoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, UploadService $uploadService)
     {
         $validated = $request->safe()->except(['authors', 'categories']);
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $uploadService->uploadImage($request->file('image'));
+        }
         $categories = $request->safe()->only(['categories']);
         $authors = $request->safe()->only(['authors']);
         $news = new News($validated);
@@ -95,9 +99,16 @@ class NewsController extends Controller
      * @param News $news
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRequest $request, News $news)
+    public function update(UpdateRequest $request, News $news, UploadService $uploadService)
     {
         $validated = $request->safe()->only(['title', 'annotation', 'content', 'status']);
+        if($request->removeImage && $request->oldImageUrl) {
+            $uploadService->removeImage($request->oldImageUrl);
+            $validated['image_url'] = null;
+        }
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $uploadService->uploadImage($request->file('image'), $request->oldImageUrl);
+        }
         $categories = $request->safe()->only(['categories']);
         $authors = $request->safe()->only(['authors']);
         $news = $news->fill($validated);

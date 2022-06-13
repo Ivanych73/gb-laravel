@@ -24,6 +24,24 @@ class QueryBuilderSources implements QueryBuilder
         }
     }
 
+    public function listSourcesWithUrl(array $columns = []): Collection
+    {
+        if (count($columns)) {
+            return Source::whereNotNull('url')->get($columns);
+        } else {
+            return Source::whereNotNull('url')->get();
+        }
+    }
+
+    public function listSourcesById(array $ids, array $columns = []): Collection
+    {
+        if (count($columns)) {
+            return Source::whereIn('id', $ids)->get($columns);
+        } else {
+            return Source::whereIn('id', $ids)->get();
+        }
+    }
+
     public function getSourceDetailById(int $sourceId, array $columns = []): Collection
     {
         if (count($columns)) {
