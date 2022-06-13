@@ -3,26 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Author\StoreRequest;
-use App\Http\Requests\Admin\Author\UpdateRequest;
+use App\Http\Requests\Admin\User\UpdateRequest;
+use App\Models\User;
+use App\Queries\QueryBuilderUsers;
 use Illuminate\Http\Request;
-use App\Queries\QueryBuilderAuthors;
-use App\Models\Author;
 use Illuminate\Support\Facades\Log;
 
-class AuthorController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(QueryBuilderAuthors $authorsList)
+    public function index(QueryBuilderUsers $userslist)
     {
         return view(
-            'admin.authors.index',
+            'admin.users.index',
             [
-                'authors' => $authorsList->listAuthors()
+                'users' => $userslist->listUsers(['id', 'name', 'is_admin', 'email', 'created_at'])
             ]
         );
     }
@@ -34,7 +33,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        return view('admin.authors.create');
+        //
     }
 
     /**
@@ -43,17 +42,9 @@ class AuthorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        $author = new Author($validated);
-
-        if ($author->save()) {
-            return redirect()->route('admin.authors.index')
-                ->with('success', __('message.admin.author.create.success'));
-        }
-
-        return back()->with('error', __('message.admin.author.create.fail'));
+        //
     }
 
     /**
@@ -70,42 +61,42 @@ class AuthorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Author $author
+     * @param  User $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Author $author)
+    public function edit(User $user)
     {
-        return view('admin.authors.edit', ['author' => $author]);
+        return view('admin.users.edit', ['user' => $user]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  User $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRequest $request, Author $author)
+    public function update(UpdateRequest $request, User $user)
     {
         $validated = $request->validated();
-        $author = $author->fill($validated);
-        if ($author->save()) {
-            return redirect()->route('admin.authors.index')
-                ->with('success', __('message.admin.author.update.success'));
+        $user = $user->fill($validated);
+        if ($user->save()) {
+            return redirect()->route('admin.users.index')
+                ->with('success', __('message.admin.user.update.success'));
         }
-        return back()->with('error', __('message.admin.author.update.success'));
+        return back()->with('error', __('message.admin.user.update.fail'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Author $author)
+    public function destroy(User $user)
     {
         try {
-            $author->delete();
+            $user->delete();
             return response()->json('success');
         } catch (\Exception $e) {
             Log::error($e->getMessage());

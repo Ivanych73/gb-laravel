@@ -22,16 +22,43 @@
                     <li class="nav-item"><a class="nav-link active" aria-current="page"
                             href="{{ route('news.main') }}">Главная</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">О нас</a></li>
+                    @if (Auth::check() && Auth::user()->is_admin)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.index') }}">Панель
+                                управления</a></li>
+                    @endif
                     <li class="nav-item"><a class="nav-link" href="{{ route('contacts') }}">Контакты</a>
                     </li>
                     <li class="dropdown nav-item">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Связаться с нами
                         </a>
 
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <li><a class="dropdown-item" href="{{ route('user.feedback') }}">Обратная связь</a></li>
                             <li><a class="dropdown-item" href="{{ route('user.order') }}">Оформить заказ</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Личный кабинет
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            @if (Auth::check())
+                                <li class="nav-item">
+                                    <form method="post" action="{{ route('logout') }}">
+                                        @csrf
+                                        <input class="dropdown-item" type="submit" value="Выход">
+                                    </form>
+                                </li>
+                                <li><a class="dropdown-item" href="{{ route('user.profile') }}">Личная страница</a>
+                                </li>
+                            @else
+                                <li><a class="dropdown-item" href="{{ route('login') }}">Вход</a></li>
+                                <li><a class="dropdown-item" href="{{ route('register') }}">Регистрация</a></li>
+                            @endif
                         </ul>
                     </li>
                 </ul>

@@ -20,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(QueryBuilder::class, QueryBuilderAuthors::class);
         $this->app->bind(QueryBuilder::class, QueryBuilderFeedbacks::class);
         $this->app->bind(QueryBuilder::class, QueryBuilderOrders::class);
+        $this->app->bind(QueryBuilder::class, QueryBuilderUsers::class);
+
     }
 
     /**

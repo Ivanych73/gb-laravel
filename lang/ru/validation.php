@@ -147,6 +147,7 @@ return [
         'annotation' => 'Аннотация',
         'status' => 'Статус',
         'authors' => 'Автор(ы)',
-        'categories' => 'Категория(и)'
+        'categories' => 'Категория(и)',
+        'password' => 'Пароль',
     ],
 ];
