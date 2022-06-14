@@ -30,6 +30,20 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link @if (request()->routeIs('admin.sources.*')) active @endif"
+                    href="{{ route('admin.sources.index') }}">
+                    <span data-feather="shopping-cart"></span>
+                    Источники
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @if (request()->routeIs('admin.users.*')) active @endif"
+                    href="{{ route('admin.users.index') }}">
+                    <span data-feather="shopping-cart"></span>
+                    Пользователи
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link @if (request()->routeIs('admin.feedbacks.*')) active @endif"
                     href="{{ route('admin.feedbacks.index') }}">
                     <span data-feather="shopping-cart"></span>
@@ -44,12 +58,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link @if (request()->routeIs('admin.parser.*')) active @endif"
+                    href="{{ route('admin.parser.sources') }}">
                     <span data-feather="users"></span>
-                    Загрузки
+                    Парсинг
                 </a>
             </li>
-
         </ul>
     </div>
 </nav>

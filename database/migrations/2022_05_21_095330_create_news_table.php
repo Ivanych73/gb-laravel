@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title', 255);
             $table->text('annotation');
             $table->text('content');
-            $table->enum('status', ['active', 'draft', 'off']);
+            $table->enum('status', ['active', 'draft', 'off'])->default('draft');
             $table->string('image_url', 255)->nullable();
             $table->foreignId('source_id')->constrained('sources')->cascadeOnDelete()->default(1);
             $table->timestamps();

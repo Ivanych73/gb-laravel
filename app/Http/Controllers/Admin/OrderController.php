@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Order\UpdateRequest;
 use App\Models\Order;
 use App\Queries\QueryBuilderOrders;
 use Illuminate\Http\Request;
@@ -75,15 +76,15 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Order $order)
+    public function update(UpdateRequest $request, Order $order)
     {
-        $validated = $request->only(['status']);
+        $validated = $request->validated();
         $order = $order->fill($validated);
         if ($order->save()) {
             return redirect()->route('admin.orders.index')
-                ->with('success', 'Запись успешно обновлена');
+                ->with('success', __('message.admin.order.update.success'));
         }
-        return back()->with('error', 'Ошибка обновления');
+        return back()->with('error', __('message.admin.order.update.fail'));
     }
 
     /**

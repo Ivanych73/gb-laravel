@@ -22,7 +22,7 @@
                     name="title" 
                     placeholder="Введите название"
                     required
-                    value="{{ $category->title }}"
+                    value="@if (old('title')) {{ old('title') }} @else {{ $category->title }} @endif"
                 >
             </div>
             <div class="mb-3">
@@ -32,7 +32,7 @@
                     id="descriptionTextarea" 
                     name="description" rows="3"
                     required
-                >{{ $category->description }}</textarea>
+                >@if (old('description')) {{ old('description') }} @else {{ $category->description }} @endif</textarea>
             </div>
             <button type="submit" class="btn btn-primary mb-3">Сохранить</button>
             <a href="{{ route('admin.categories.index') }}" class="btn btn-primary mb-3">Выйти без сохранения</a>

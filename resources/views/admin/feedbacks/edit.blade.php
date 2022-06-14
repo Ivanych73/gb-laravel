@@ -25,12 +25,12 @@
                 </div>
                 <select class="custom-select" id="statusSelect" name="status">
                     <option value="new" 
-                        @if ($feedback->status == 'new') 
+                        @if (old('status') == 'new' || (!old('status') && $feedback->status == 'new')) 
                             selected
                         @endif
                     >Новый</option>
                     <option value="closed"
-                        @if ($feedback->status == 'closed') 
+                        @if (old('status') == 'closed' || (!old('status') && $feedback->status == 'closed')) 
                             selected
                         @endif                    
                     >Обработан</option>

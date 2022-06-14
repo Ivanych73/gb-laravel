@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\News\StoreRequest;
+use App\Http\Requests\Admin\News\UpdateRequest;
 use App\Models\News;
 use App\Queries\QueryBuilderAuthors;
 use App\Queries\QueryBuilderNews;
 use App\Queries\QueryBuilderCategories;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PhpParser\Node\Stmt\TryCatch;
 
 class NewsController extends Controller
 {
@@ -40,25 +42,27 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\Admin\News\StoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request, UploadService $uploadService)
     {
-        $request->validate([
-            'title' => ['required', 'string'],
-            'content' => ['required', 'string'],
-            'annotation' => ['required', 'string'],
-            'authors' => ['required', 'array'],
-            'categories' => ['required', 'array']
-        ]);
-        $validated = $request->except('_token', 'authors', 'categories');
+        $validated = $request->safe()->except(['authors', 'categories']);
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $uploadService->uploadImage($request->file('image'));
+        }
+        $categories = $request->safe()->only(['categories']);
+        $authors = $request->safe()->only(['authors']);
         $news = new News($validated);
-        if ($news->save() && $news->categories()->sync($request->categories) && $news->authors()->sync($request->authors)) {
+        if (
+            $news->save() &&
+            $news->categories()->sync($categories['categories']) &&
+            $news->authors()->sync($authors['authors'])
+        ) {
             return redirect()->route('admin.news.index')
-                ->with('success', 'Запись успешно добавлена');
+                ->with('success', __('message.admin.news.create.success'));
         };
-        return back()->with('error', 'Ошибка добавления');
+        return back()->with('error', __('message.admin.news.create.fail'));
     }
 
     /**
@@ -80,7 +84,6 @@ class NewsController extends Controller
      */
     public function edit(News $news, QueryBuilderNews $newslist, QueryBuilderCategories $categoriesList, QueryBuilderAuthors $authorsList)
     {
-        //dd($news);
         return view('admin.news.edit', [
             'news' => $newslist->showNewsDetailById($news->id),
             'categoriesList' => $categoriesList->listCategories(['id', 'title']),
@@ -92,25 +95,38 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     *
+     * @param  App\Http\Requests\Admin\News\UpdateRequest;  $request
+     * @param News $news
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, News $news)
+    public function update(UpdateRequest $request, News $news, UploadService $uploadService)
     {
-        $validated = $request->only(['title', 'annotation', 'content', 'status']);
+        $validated = $request->safe()->only(['title', 'annotation', 'content', 'status']);
+        if($request->removeImage && $request->oldImageUrl) {
+            $uploadService->removeImage($request->oldImageUrl);
+            $validated['image_url'] = null;
+        }
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $uploadService->uploadImage($request->file('image'), $request->oldImageUrl);
+        }
+        $categories = $request->safe()->only(['categories']);
+        $authors = $request->safe()->only(['authors']);
         $news = $news->fill($validated);
-        if ($news->save() && $news->categories()->sync($request->categories) && $news->authors()->sync($request->authors)) {
+        if (
+            $news->save() &&
+            $news->categories()->sync($categories['categories']) &&
+            $news->authors()->sync($authors['authors'])
+        ) {
             return redirect()->route('admin.news.index')
-                ->with('success', 'Запись успешно обновлена');
+                ->with('success', __('message.admin.news.update.success'));
         };
-        return back()->with('error', 'Ошибка обновления');
+        return back()->with('error', __('message.admin.news.update.fail'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  News $news
      * @return \Illuminate\Http\Response
      */
     public function destroy(News $news)

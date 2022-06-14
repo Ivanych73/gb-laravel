@@ -26,6 +26,15 @@ class QueryBuilderNews implements QueryBuilder
         }
     }
 
+    public function showNewsDetailBySlug(string $slug, array $columns = []): Model
+    {
+        if (count($columns)) {
+            return News::where('slug', $slug)->with(['authors', 'categories'])->select($columns)->get()->first();
+        } else {
+            return News::where('slug', $slug)->with(['authors', 'categories'])->get()->first();
+        }
+    }
+
     public function showNewsDetailById($newsId, array $columns = []): Model
     {
         if (count($columns)) {

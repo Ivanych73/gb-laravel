@@ -7,9 +7,10 @@
 
     <div class="table-responsive">
         <h3>Форма добавления новости</h3>
+        @include('inc.messages')
     </div>
     <div class="container">
-        <form action="{{ route('admin.news.store') }}" method="post">
+        <form action="{{ route('admin.news.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="title" class="form-label">Название</label>
@@ -36,7 +37,7 @@
                         <label for="statusSelect">Статус</label>
                         <select class="form-select" id="statusSelect" name="status">
                             <option value="active" @if (old('status') == 'active') selected @endif>Опубликовано</option>
-                            <option value="draft" @if (old('status') == 'draft') selected @endif selected>Черновик
+                            <option value="draft" @if (old('status') == 'draft' || !old('status')) selected @endif>Черновик
                             </option>
                             <option value="off" @if (old('status') == 'off') selected @endif>Снято с публикации
                             </option>
@@ -70,11 +71,14 @@
                             <input type="file" name="image" id="image" class="form-control">
                             <p class="help-block">Image definitions</p>
                         </div>
-                        <a href="#" class="thumbnail">
-                            <img src="http://fakeimg.pl/300/">
-                        </a>
+                        <button type="button" data-delete="yes" class="btn btn-danger my-3">Удалить изображение</button>
+                        <img class="w-100" data-image="yes" src="http://fakeimg.pl/300/">
                     </div>
                 </div>
         </form>
     </div>
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/handle.image.js') }}"></script>
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('js/use.ckeditor.js') }}"></script>
 @endsection

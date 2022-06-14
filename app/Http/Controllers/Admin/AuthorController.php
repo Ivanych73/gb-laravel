@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Author\StoreRequest;
+use App\Http\Requests\Admin\Author\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Queries\QueryBuilderAuthors;
 use App\Models\Author;
@@ -41,17 +43,17 @@ class AuthorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $validated = $request->only(['first_name', 'last_name']);
+        $validated = $request->validated();
         $author = new Author($validated);
 
         if ($author->save()) {
             return redirect()->route('admin.authors.index')
-                ->with('success', 'Запись успешно добавлена');
+                ->with('success', __('message.admin.author.create.success'));
         }
 
-        return back()->with('error', 'Ошибка добавления');
+        return back()->with('error', __('message.admin.author.create.fail'));
     }
 
     /**
@@ -83,15 +85,15 @@ class AuthorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(UpdateRequest $request, Author $author)
     {
-        $validated = $request->only(['first_name', 'last_name']);
+        $validated = $request->validated();
         $author = $author->fill($validated);
         if ($author->save()) {
             return redirect()->route('admin.authors.index')
-                ->with('success', 'Запись успешно обновлена');
+                ->with('success', __('message.admin.author.update.success'));
         }
-        return back()->with('error', 'Ошибка обновления');
+        return back()->with('error', __('message.admin.author.update.fail'));
     }
 
     /**
