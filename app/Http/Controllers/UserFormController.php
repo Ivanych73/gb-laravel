@@ -65,4 +65,5 @@ class UserFormController extends Controller
 
         return view('user.store', $result);
     }
+
 }
