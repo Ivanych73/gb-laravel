@@ -10,8 +10,11 @@ use App\Http\Controllers\Admin\AuthorController as AdminAuthorController;
 use App\Http\Controllers\Admin\FeedbackController as AdminFeedbackController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\SourceController as AdminSourceController;
+use App\Http\Controllers\Admin\ParserController as AdminParserController;
 use App\Http\Controllers\UserFormController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\SocialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +74,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/feedbacks', AdminFeedbackController::class);
         Route::resource('/orders', AdminOrderController::class);
         Route::resource('/users', AdminUserController::class);
+        Route::resource('/sources', AdminSourceController::class);
+        Route::get('/parser', AdminParserController::class)->name('parser');
     });
 });
 
@@ -79,4 +84,13 @@ Route::controller(UserFormController::class)->group(function () {
     Route::get('/order', 'order')->name('user.order');
     Route::match(['post', 'get'], '/saveFeedback', 'saveFeedback')->name('user.saveFeedback');
     Route::match(['post', 'get'], '/saveOrder', 'saveOrder')->name('user.saveOrder');
+});
+
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/auth/{driver}/redirect', [SocialController::class, 'redirect'])
+        ->where('driver', '\w+')
+        ->name('social.redirect');
+    Route::any('/auth/{driver}/callback', [SocialController::class, 'callback'])
+        ->where('driver', '\w+')
+        ->name('social.callback');
 });

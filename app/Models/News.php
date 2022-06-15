@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class News extends Model
 {
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     protected $table = "news";
-    protected $fillable = ['title', 'annotation', 'content', 'status', 'image_url', 'source_id'];
+    protected $fillable = ['title', 'annotation', 'content', 'status', 'image_url', 'source_id', 'slug'];
 
     public function categories()
     {
@@ -20,5 +21,19 @@ class News extends Model
     public function authors()
     {
         return $this->BelongsToMany(Author::class, 'authors_news');
+    }
+
+        /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
     }
 }

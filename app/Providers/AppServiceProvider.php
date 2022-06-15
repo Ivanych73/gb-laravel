@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use App\Queries\QueryBuilderCategories;
+use App\Services\Contract\Social;
+use App\Services\SocialService;
+use App\Services\Contract\Parser;
+use App\Services\ParserService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(QueryBuilder::class, QueryBuilderOrders::class);
         $this->app->bind(QueryBuilder::class, QueryBuilderUsers::class);
 
+        $this->app->bind(Social::class, SocialService::class);
+        $this->app->bind(Parser::class, ParserService::class);
     }
 
     /**
