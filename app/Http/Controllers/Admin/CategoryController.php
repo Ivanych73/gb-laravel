@@ -22,7 +22,7 @@ class CategoryController extends Controller
         return view(
             'admin.categories.index',
             [
-                'categories' => $categoriesList->listCategories()
+                'categories' => $categoriesList->listItems()
             ]
         );
     }

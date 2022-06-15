@@ -17,6 +17,6 @@ class Author extends Model
 
     public function news()
     {
-        return $this->BelongsToMany(News::class, 'authors_news');
+        return $this->belongsToMany(News::class, 'authors_news');
     }
 }

@@ -21,7 +21,7 @@ class UserController extends Controller
         return view(
             'admin.users.index',
             [
-                'users' => $userslist->listUsers(['id', 'name', 'is_admin', 'email', 'created_at'])
+                'users' => $userslist->listItems(['id', 'name', 'is_admin', 'email', 'created_at'])
             ]
         );
     }

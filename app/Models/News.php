@@ -15,12 +15,12 @@ class News extends Model
 
     public function categories()
     {
-        return $this->BelongsToMany(Category::class, 'categories_news');
+        return $this->belongsToMany(Category::class, 'categories_news');
     }
 
     public function authors()
     {
-        return $this->BelongsToMany(Author::class, 'authors_news');
+        return $this->belongsToMany(Author::class, 'authors_news');
     }
 
     /**

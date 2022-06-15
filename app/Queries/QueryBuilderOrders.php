@@ -8,28 +8,10 @@ use App\Models\Order;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class QueryBuilderOrders implements QueryBuilder
+class QueryBuilderOrders extends QueryBuilderBase implements QueryBuilder
 {
-    public function getBuilder(): Builder
+    public function __construct(Order $model)
     {
-        return Order::query();
-    }
-
-    public function listOrders(array $columns = []): Collection
-    {
-        if (count($columns)) {
-            return Order::get($columns);
-        } else {
-            return Order::get();
-        }
-    }
-
-    public function getOrderDetailById(int $orderId, array $columns = []): Collection
-    {
-        if (count($columns)) {
-            return Order::whereId($orderId)->get($columns);
-        } else {
-            return Order::whereId($orderId)->get();
-        }
+        $this->model = $model;
     }
 }

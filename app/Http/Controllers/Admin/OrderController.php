@@ -21,7 +21,7 @@ class OrderController extends Controller
         return view(
             'admin.orders.index',
             [
-                'orders' => $ordersList->listOrders()
+                'orders' => $ordersList->listItems()
             ]
         );
     }

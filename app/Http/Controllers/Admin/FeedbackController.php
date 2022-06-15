@@ -21,7 +21,7 @@ class FeedbackController extends Controller
         return view(
             'admin.feedbacks.index',
             [
-                'feedbacks' => $feedbacksList->listFeedbacks()
+                'feedbacks' => $feedbacksList->listItems()
             ]
         );
     }

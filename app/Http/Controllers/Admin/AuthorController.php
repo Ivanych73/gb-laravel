@@ -22,7 +22,7 @@ class AuthorController extends Controller
         return view(
             'admin.authors.index',
             [
-                'authors' => $authorsList->listAuthors()
+                'authors' => $authorsList->listItems()
             ]
         );
     }

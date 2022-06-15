@@ -8,28 +8,10 @@ use App\Models\User;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class QueryBuilderUsers implements QueryBuilder
+class QueryBuilderUsers extends QueryBuilderBase implements QueryBuilder
 {
-    public function getBuilder(): Builder
+    public function __construct(User $model)
     {
-        return User::query();
-    }
-
-    public function listUsers(array $columns = []): Collection
-    {
-        if (count($columns)) {
-            return User::get($columns);
-        } else {
-            return User::get();
-        }
-    }
-
-    public function getAuthorDetailById(int $userId, array $columns = []): Collection
-    {
-        if (count($columns)) {
-            return User::whereId($userId)->get($columns);
-        } else {
-            return User::whereId($userId)->get();
-        }
+        $this->model = $model;
     }
 }

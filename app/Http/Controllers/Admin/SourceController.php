@@ -22,7 +22,7 @@ class SourceController extends Controller
         return view(
             'admin.sources.index',
             [
-                'sources' => $sourcesList->listSources()
+                'sources' => $sourcesList->listItems()
             ]
         );
     }

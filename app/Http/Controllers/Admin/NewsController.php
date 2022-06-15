@@ -33,9 +33,9 @@ class NewsController extends Controller
     public function create(QueryBuilderCategories $categoriesList, QueryBuilderAuthors $authorsList)
     {
         return view('admin.news.create', [
-            'categoriesList' => $categoriesList->listCategories(['id', 'title']),
+            'categoriesList' => $categoriesList->listItems(['id', 'title']),
             'authorsList' =>
-            $authorsList->listAuthors(['id', 'first_name', 'last_name'])
+            $authorsList->listItems(['id', 'first_name', 'last_name'])
         ]);
     }
 
@@ -86,9 +86,9 @@ class NewsController extends Controller
     {
         return view('admin.news.edit', [
             'news' => $newslist->showNewsDetailById($news->id),
-            'categoriesList' => $categoriesList->listCategories(['id', 'title']),
+            'categoriesList' => $categoriesList->listItems(['id', 'title']),
             'authorsList' =>
-            $authorsList->listAuthors(['id', 'first_name', 'last_name'])
+            $authorsList->listItems(['id', 'first_name', 'last_name'])
         ]);
     }
 
