@@ -3,24 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\Contract\Parser;
+use App\Http\Requests\Admin\Parser\ParseNewsRequest;
+use App\Jobs\NewsParser;
+use App\Queries\QueryBuilderSources;
 use App\Services\ParserService;
-use Illuminate\Http\Request;
 
 class ParserController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function __invoke(Request $request, ParserService $parser)
+    public function parseNews(ParseNewsRequest $request, QueryBuilderSources $sources)
+    {
+        $sources = $sources->listSourcesById($request->validated()['ids'], ['id', 'url']);
+        foreach ($sources as $source) {
+            NewsParser::dispatch($source);
+        }
+        return redirect()->route('admin.news.index')
+            ->with('success', __('message.admin.parser.started'));
+    }
+
+    public function showSources(QueryBuilderSources $sourcesList)
     {
         return view(
-            'admin.parser.index',
+            'admin.parser.sources',
             [
-                'parsed' => $parser->setLink('https://news.yandex.ru/science.rss')->parse()
+                'sources' => $sourcesList->listSourcesWithUrl(['id', 'title', 'description', 'url'])
             ]
         );
     }

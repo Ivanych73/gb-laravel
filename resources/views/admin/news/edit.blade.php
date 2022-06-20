@@ -10,7 +10,7 @@
         @include('inc.messages')
     </div>
     <div class="container">
-        <form method="post" action="{{ route('admin.news.update', ['news' => $news]) }}">
+        <form method="post" action="{{ route('admin.news.update', ['news' => $news]) }}" enctype="multipart/form-data">
             @csrf
             @method('put')
             <div class="form-group">
@@ -90,11 +90,17 @@
                             <input type="file" name="image" id="image" class="form-control">
                             <p class="help-block">Image definitions</p>
                         </div>
-                        <a href="#" class="thumbnail">
-                            <img src="http://fakeimg.pl/300/">
-                        </a>
+                        <input type="hidden" name="removeImage" value="0">
+                        <input type="hidden" name="oldImageUrl" value="{{ $news->image_url }}">
+                        <button type="button" data-delete="yes" class="btn btn-danger my-3">Удалить изображение</button>
+                        <img class="w-100" data-image="yes"
+                            src="@if ($news->image_url) {{ Storage::url($news->image_url) }} @else http://fakeimg.pl/300/ @endif">
                     </div>
                 </div>
         </form>
     </div>
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/handle.image.js') }}"></script>
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('js/use.ckeditor.js') }}"></script>
 @endsection

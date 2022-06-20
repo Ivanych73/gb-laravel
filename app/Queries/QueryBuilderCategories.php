@@ -25,6 +25,15 @@ class QueryBuilderCategories implements QueryBuilder
         }
     }
 
+    public function listCategoriesWithNews(array $columns = []): Collection
+    {
+        if (count($columns)) {
+            return Category::withCount('news')->havingRaw('news_count > 0')->get($columns);
+        } else {
+            return Category::withCount('news')->havingRaw('news_count > 0')->get();
+        }
+    }
+
     public function getCategoryDetailById(int $categoryId, array $columns = []): Collection
     {
         if (count($columns)) {
@@ -36,7 +45,8 @@ class QueryBuilderCategories implements QueryBuilder
 
     public function listNewsByCategory(int $categoryId): LengthAwarePaginator
     {
-        return Category::select('categories.title as category_title', 'news.id', 'news.title', 'annotation')
+        return Category::select('categories.title as category_title', 'news.id', 'news.title', 'annotation', 'slug')
+            ->where('status', 'active')
             ->where('categories.id', $categoryId)
             ->join('categories_news', 'categories.id', '=', 'category_id')
             ->join('news', 'news.id', '=', 'news_id')
